@@ -38,10 +38,47 @@ void mergeIntoFile (MyDB_TableReaderWriter &sortIntoMe, vector <MyDB_RecordItera
 
 vector <MyDB_PageReaderWriter> mergeIntoList (MyDB_BufferManagerPtr parent, MyDB_RecordIteratorAltPtr leftIter, 
 	MyDB_RecordIteratorAltPtr rightIter, function <bool ()> comparator, MyDB_RecordPtr lhs, MyDB_RecordPtr rhs) {
-	// Get anonymous storage from buffer manager
- 
-    // Iterate through both iterators, do a comparison, and add to anonymous storag
-	return vector <MyDB_PageReaderWriter> (); 
+    
+    vector <MyDB_PageReaderWriter> sortedPages;
+    MyDB_PageReaderWriter anonyPage = MyDB_PageReaderWriter(*parent);
+
+    bool hasLeft = true;
+    bool hasRight = true;
+    while (hasLeft || hasRight) {
+        MyDB_RecordPtr appendMe;
+        if (!hasLeft) {
+            rightIter->getCurrent(rhs);
+            appendMe = rhs;
+            hasRight = rightIter->advance();
+        } else if (!hasRight) {
+            leftIter->getCurrent(lhs);
+            appendMe = lhs;
+            hasLeft = leftIter->advance();
+        } else {
+            leftIter->getCurrent(lhs);
+            rightIter->getCurrent(rhs);
+            if (comparator()) {
+                appendMe = lhs;
+                hasLeft = leftIter->advance();
+            } else {
+                appendMe = rhs;
+                hasRight = rightIter->advance();
+            }
+        }
+
+        if (!anonyPage.append(appendMe)) { 
+            // Add to result vector and get a new anonymous page to append to
+            sortedPages.push_back(anonyPage);
+            anonyPage = MyDB_PageReaderWriter(*parent);
+            
+            // This should never happen
+            if (!anonyPage.append(appendMe)) {
+                std::cout << "Could not append record to new anonymous page" << std::endl;
+            }
+        }
+    }
+
+	return sortedPages; 
 } 
 	
 void sort (int runSize, MyDB_TableReaderWriter &sortMe, MyDB_TableReaderWriter &sortIntoMe, 

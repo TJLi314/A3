@@ -10,7 +10,9 @@
 
 using namespace std;
 
-void mergeIntoFile (MyDB_TableReaderWriter &sortIntoMe, vector <MyDB_RecordIteratorAltPtr> &mergeUs, function <bool ()> comparator, MyDB_RecordPtr lhs, MyDB_RecordPtr rhs) {
+void mergeIntoFile (MyDB_TableReaderWriter &sortIntoMe, vector <MyDB_RecordIteratorAltPtr> &mergeUs, 
+    function <bool ()> comparator, MyDB_RecordPtr lhs, MyDB_RecordPtr rhs) {
+
     auto cmp = [&lhs, &rhs, &comparator](MyDB_RecordPtr a, MyDB_RecordPtr b) { 
         lhs = a;
         rhs = b;
@@ -121,6 +123,8 @@ void sort (int runSize, MyDB_TableReaderWriter &sortMe, MyDB_TableReaderWriter &
         MyDB_RecordIteratorAltPtr sortedRunPtr = getIteratorAlt(run[0]);
         sortedRunPtrs.push_back(sortedRunPtr);
     }
+
+    mergeIntoFile(sortIntoMe, sortedRunPtrs, comparator, lhs, rhs);
 } 
 
 #endif

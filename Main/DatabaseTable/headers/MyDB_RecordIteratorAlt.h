@@ -31,6 +31,8 @@ public:
 	// be called until after getCurrent () has been called
 	virtual bool advance () = 0;
 
+    virtual bool hasNext();
+
 	// destructor and contructor
 	MyDB_RecordIteratorAlt () {};
 	virtual ~MyDB_RecordIteratorAlt () {};

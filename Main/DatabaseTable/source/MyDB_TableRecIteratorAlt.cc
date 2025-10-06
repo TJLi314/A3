@@ -54,6 +54,16 @@ MyDB_TableRecIteratorAlt :: MyDB_TableRecIteratorAlt (MyDB_TableReaderWriter &my
 	myIter = myParent[curPage].getIteratorAlt ();		
 }
 
+bool MyDB_TableRecIteratorAlt :: hasNext() {
+    if (myIter->hasNext()) {
+        return true;
+    }
+    if (curPage == myTable->lastPage() || curPage == highPage) {
+        return false;
+    }
+    return true;
+}
+
 MyDB_TableRecIteratorAlt :: ~MyDB_TableRecIteratorAlt () {}
 
 #endif

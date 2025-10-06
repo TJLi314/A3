@@ -38,6 +38,7 @@ public:
         // false if there are no more records to iterate over.  Not that this cannot
         // be called until after getCurrent () has been called
         bool advance () override;
+        
 
 	// destructor and contructor
 	MyDB_PageListIteratorAlt (vector <MyDB_PageReaderWriter> &forUs);

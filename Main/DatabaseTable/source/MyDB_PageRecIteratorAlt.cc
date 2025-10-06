@@ -44,6 +44,10 @@ MyDB_PageRecIteratorAlt :: MyDB_PageRecIteratorAlt (MyDB_PageHandle myPageIn) {
 	nextRecSize = 0;
 }
 
+bool MyDB_PageRecIteratorAlt :: hasNext() {
+    return bytesConsumed != NUM_BYTES_USED;
+}
+
 MyDB_PageRecIteratorAlt :: ~MyDB_PageRecIteratorAlt () {}
 
 #endif

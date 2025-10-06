@@ -19,8 +19,12 @@ void mergeIntoFile (MyDB_TableReaderWriter &sortIntoMe, vector <MyDB_RecordItera
         return comparator();
     };
     map<MyDB_RecordPtr, int, decltype(cmp)> heap(cmp);
+    MyDB_SchemaPtr schema = lhs->getSchema();
     for (int i = 0; i < mergeUs.size(); i++) {
-        MyDB_RecordPtr temp = make_shared<MyDB_Record>(lhs->getSchema());
+        // if (!mergeUs[i]->hasNext()) {
+        //     continue;
+        // }
+        MyDB_RecordPtr temp = make_shared<MyDB_Record>(schema);
         mergeUs[i]->getCurrent(temp);
         heap[temp] = i;
     }
@@ -31,7 +35,7 @@ void mergeIntoFile (MyDB_TableReaderWriter &sortIntoMe, vector <MyDB_RecordItera
         heap.erase(pop);
         sortIntoMe.append(record);
         if (mergeUs[idx]->advance()) {
-            MyDB_RecordPtr temp = make_shared<MyDB_Record>(lhs->getSchema());
+            MyDB_RecordPtr temp = make_shared<MyDB_Record>(schema);
             mergeUs[idx]->getCurrent(temp);
             heap[temp] = idx;
         }
@@ -46,6 +50,7 @@ vector <MyDB_PageReaderWriter> mergeIntoList (MyDB_BufferManagerPtr parent, MyDB
 
     bool hasLeft = true;
     bool hasRight = true;
+    std::cout << "hasLeft: " << hasLeft << ", hasRight: " << hasRight << std::endl;
     while (hasLeft || hasRight) {
         MyDB_RecordPtr appendMe;
         if (!hasLeft) {
@@ -88,7 +93,8 @@ void sort (int runSize, MyDB_TableReaderWriter &sortMe, MyDB_TableReaderWriter &
 
 	vector<MyDB_RecordIteratorAltPtr> sortedRunPtrs;
     int i = 0;
-    while (i < sortMe.getNumPages() - 1) {
+    while (i < sortMe.getNumPages()) {
+        std::cout << "entered for loop with i = " << i << std::endl;
         // Load a run of pages into RAM .
         // Each page will correspond to a MyDB_PageReaderWriter object, and
         // all of those objects will be stored in a std :: vector.
@@ -96,8 +102,9 @@ void sort (int runSize, MyDB_TableReaderWriter &sortMe, MyDB_TableReaderWriter &
         vector<vector<MyDB_PageReaderWriter>> run;
         for (; i < end; i++) {
             MyDB_PageReaderWriter page = sortMe[i];
- 
+            
             // Sort each individual page in the vector
+            
             page.sortInPlace(comparator, lhs, rhs);
             vector<MyDB_PageReaderWriter> pageList = { page };
             run.push_back(pageList);
@@ -125,6 +132,8 @@ void sort (int runSize, MyDB_TableReaderWriter &sortMe, MyDB_TableReaderWriter &
         MyDB_RecordIteratorAltPtr sortedRunPtr = getIteratorAlt(run[0]);
         sortedRunPtrs.push_back(sortedRunPtr);
     }
+
+    std::cout << "Merging " << sortedRunPtrs.size() << " runs..." << std::endl;
 
     mergeIntoFile(sortIntoMe, sortedRunPtrs, comparator, lhs, rhs);
 } 

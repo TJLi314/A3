@@ -631,7 +631,7 @@ int main (int argc, char *argv[]) {
         while (myIterOne->advance ()) {
 			myIterTwo->advance ();
 			index++;
-			cout << "Record number " << index << endl;
+			// cout << "Record number " << index << endl;
 			// get the two records
 			myIterOne->getCurrent (rec1);
 			myIterTwo->getCurrent (rec2);
@@ -639,14 +639,21 @@ int main (int argc, char *argv[]) {
 			if (!myComp ()) {
 				myIterOne->getCurrent (rec2);
 				myIterTwo->getCurrent (rec1);
-				if (!myComp ())
+				if (!myComp ()) {
 					matches++;
-				else {
-					cout << "Records do not match" << endl;
-					cout << "Record 1: " << rec1 << endl;
-					cout << "Record 2: " << rec2 << endl;
+                    // cout << "Records match" << endl;
+                } else {
+					// cout << "Records do not match" << endl;
 				}
-			}
+                // cout << "Our sorting: " << rec2 << endl;
+                // cout << "Existing sorting: " << rec1 << endl;
+                // cout << "index: " << index << endl;
+			// } else {
+            //         cout << "Records do not match" << endl;
+            //         cout << "Our sorting: " << rec1 << endl;
+            //         cout << "Existing sorting: " << rec2 << endl;
+            //         cout << "index: " << index << endl;
+            }
         }
 
         std::cout << "There are " << matches << " matching records." << std::endl;

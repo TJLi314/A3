@@ -10,24 +10,24 @@
 
 using namespace std;
 
+
 void mergeIntoFile (MyDB_TableReaderWriter &sortIntoMe, vector <MyDB_RecordIteratorAltPtr> &mergeUs, 
     function <bool ()> comparator, MyDB_RecordPtr lhs, MyDB_RecordPtr rhs) {
 
-    auto cmp = [&lhs, &rhs, &comparator](pair<MyDB_RecordPtr, int> a, pair<MyDB_RecordPtr, int> b) { 
-        lhs = a.first;
-        rhs = b.first;
+    auto cmp = [&lhs, &rhs, &comparator](MyDB_RecordIteratorAltPtr a, MyDB_RecordIteratorAltPtr b) { 
+        a->getCurrent(lhs);
+        b->getCurrent(rhs);
         return !comparator();
     };
 
-    priority_queue<pair<MyDB_RecordPtr, int>, vector<pair<MyDB_RecordPtr, int>>, decltype(cmp)> pq(cmp);
+    priority_queue<MyDB_RecordIteratorAltPtr, vector<MyDB_RecordIteratorAltPtr>, decltype(cmp)> pq(cmp);
 
     MyDB_SchemaPtr schema = lhs->getSchema();
     std::cout << "mergeus size: " << mergeUs.size() << std::endl;
     for (int i = 0; i < mergeUs.size(); i++) {
         MyDB_RecordPtr temp = make_shared<MyDB_Record>(schema);
         mergeUs[i]->getCurrent(temp);
-        std::cout << "i: " << i << " temp: " << temp << std::endl;
-        pq.push({temp, i});
+        pq.push(mergeUs[i]);
     }
 
     int total = 0;
@@ -35,14 +35,26 @@ void mergeIntoFile (MyDB_TableReaderWriter &sortIntoMe, vector <MyDB_RecordItera
     while (!pq.empty()) {
         total++;
 
-        auto [record, idx] = pq.top();
+        // auto copy = pq;
+        // std::cout << "Printing queue contents:" << std::endl;
+        // while (!copy.empty()) {
+        //     auto [record, idx] = copy.top();
+        //     copy.pop();
+        //     std::cout << idx << ": " << record << std::endl;
+        // }
+        // std::cout << std::endl;
+
+        MyDB_RecordIteratorAltPtr ptr = pq.top();
         pq.pop();
+        MyDB_RecordPtr record = make_shared<MyDB_Record>(schema);
+        ptr->getCurrent(record);
 
         sortIntoMe.append(record);
-        if (mergeUs[idx]->advance()) {
+
+        if (ptr->advance()) {
             MyDB_RecordPtr temp = make_shared<MyDB_Record>(schema);
-            mergeUs[idx]->getCurrent(temp);
-            pq.push({temp, idx});
+            ptr->getCurrent(temp);
+            pq.push(ptr);
         }
     }
     std::cout << "Total records merged: " << total << std::endl;
@@ -154,5 +166,6 @@ void sort (int runSize, MyDB_TableReaderWriter &sortMe, MyDB_TableReaderWriter &
 
     mergeIntoFile(sortIntoMe, sortedRunPtrs, comparator, lhs, rhs);
 } 
+
 
 #endif

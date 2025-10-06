@@ -39,8 +39,6 @@ public:
         // be called until after getCurrent () has been called
         bool advance () override;
 
-        bool hasNext ();
-
 	// destructor and contructor
 	MyDB_PageListIteratorAlt (vector <MyDB_PageReaderWriter> &forUs);
 	~MyDB_PageListIteratorAlt ();

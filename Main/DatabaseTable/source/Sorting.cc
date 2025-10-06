@@ -111,7 +111,9 @@ void sort (int runSize, MyDB_TableReaderWriter &sortMe, MyDB_TableReaderWriter &
         for (; i < end; i++) {
             MyDB_PageReaderWriter page = sortMe[i];
 
-            if (page.getIteratorAlt()->hasNext() == false) {
+            MyDB_RecordPtr temp = make_shared<MyDB_Record>(lhs->getSchema());
+
+            if (page.getIterator(temp)->hasNext() == false) {
                 continue; // Skip empty pages
             }
             

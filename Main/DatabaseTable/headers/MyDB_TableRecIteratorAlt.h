@@ -36,7 +36,6 @@ public:
         // be called until after getCurrent () has been called
         bool advance () override;
 
-        bool hasNext() override;
 
 	// destructor and contructor
 	MyDB_TableRecIteratorAlt (MyDB_TableReaderWriter &myParent, MyDB_TablePtr myTableIn);

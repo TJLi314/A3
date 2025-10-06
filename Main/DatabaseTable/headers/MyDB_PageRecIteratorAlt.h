@@ -35,8 +35,6 @@ public:
         // be called until after getCurrent () has been called
         bool advance () override;
 
-        bool hasNext() override;
-
 	// destructor and contructor
 	MyDB_PageRecIteratorAlt (MyDB_PageHandle myPageIn); 
 	~MyDB_PageRecIteratorAlt ();

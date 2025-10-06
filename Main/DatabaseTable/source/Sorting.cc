@@ -51,13 +51,14 @@ void mergeIntoFile (MyDB_TableReaderWriter &sortIntoMe, vector <MyDB_RecordItera
 vector <MyDB_PageReaderWriter> mergeIntoList (MyDB_BufferManagerPtr parent, MyDB_RecordIteratorAltPtr leftIter, 
 	MyDB_RecordIteratorAltPtr rightIter, function <bool ()> comparator, MyDB_RecordPtr lhs, MyDB_RecordPtr rhs) {
 
-    std::cout << "Merging two runs..." << std::endl;
+    // std::cout << "Merging two runs..." << std::endl;
     
     vector <MyDB_PageReaderWriter> sortedPages;
     MyDB_PageReaderWriter anonyPage = MyDB_PageReaderWriter(*parent);
 
     bool hasLeft = true;
     bool hasRight = true;
+    // int total = 0;
     while (hasLeft || hasRight) {
         MyDB_RecordPtr appendMe;
         if (!hasLeft) {
@@ -90,8 +91,11 @@ vector <MyDB_PageReaderWriter> mergeIntoList (MyDB_BufferManagerPtr parent, MyDB
                 std::cout << "Could not append record to new anonymous page" << std::endl;
             }
         }
+        // total += 1;
     }
 
+    sortedPages.push_back(anonyPage);
+    // cout << "Appended " << total << " records" << endl;
 	return sortedPages; 
 } 
 	
@@ -101,9 +105,7 @@ void sort (int runSize, MyDB_TableReaderWriter &sortMe, MyDB_TableReaderWriter &
 	vector<MyDB_RecordIteratorAltPtr> sortedRunPtrs;
     int i = 0;
     while (i < sortMe.getNumPages()) {
-        // Load a run of pages into RAM .
-        // Each page will correspond to a MyDB_PageReaderWriter object, and
-        // all of those objects will be stored in a std :: vector.
+        // cout << "starting new run" << endl;
         int end = min(i + runSize, sortMe.getNumPages());
         vector<vector<MyDB_PageReaderWriter>> run;
         for (; i < end; i++) {
@@ -123,7 +125,7 @@ void sort (int runSize, MyDB_TableReaderWriter &sortMe, MyDB_TableReaderWriter &
         // go through the list, for each adjacent pair of pages in the list, use the mergeIntoList function
         while (run.size() > 1) {
             vector<vector<MyDB_PageReaderWriter>> newVector;
- 
+            // cout << "sorting run" << endl;
             for (int j = 0; j < run.size(); j += 2) {
                 if (j == run.size() - 1) {
                     newVector.push_back(run[j]);

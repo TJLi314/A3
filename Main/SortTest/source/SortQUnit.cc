@@ -529,527 +529,534 @@ int main (int argc, char *argv[]) {
 
 	
 	
-	// case 6:
-	// //Given Test Case:
-	// cout << endl << "Test 6: Pre-released test cases with assignment:" << endl << flush;
-	// countCorrect = 0;
-	// cout << "Initialization.." << flush;
-	// {
-	// 	// create a catalog
-	// 	MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+	case 6:
+	//Given Test Case:
+	cout << endl << "Test 6: Pre-released test cases with assignment:" << endl << flush;
+	countCorrect = 0;
+	cout << "Initialization.." << flush;
+	{
+		// create a catalog
+		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
 
-	// 	// now make a schema
-	// 	MyDB_SchemaPtr mySchema = make_shared <MyDB_Schema> ();
-	// 	mySchema->appendAtt (make_pair ("suppkey", make_shared <MyDB_IntAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("name", make_shared <MyDB_StringAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("address", make_shared <MyDB_StringAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("nationkey", make_shared <MyDB_IntAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("phone", make_shared <MyDB_StringAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("acctbal", make_shared <MyDB_DoubleAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("comment", make_shared <MyDB_StringAttType> ()));
+		// now make a schema
+		MyDB_SchemaPtr mySchema = make_shared <MyDB_Schema> ();
+		mySchema->appendAtt (make_pair ("suppkey", make_shared <MyDB_IntAttType> ()));
+		mySchema->appendAtt (make_pair ("name", make_shared <MyDB_StringAttType> ()));
+		mySchema->appendAtt (make_pair ("address", make_shared <MyDB_StringAttType> ()));
+		mySchema->appendAtt (make_pair ("nationkey", make_shared <MyDB_IntAttType> ()));
+		mySchema->appendAtt (make_pair ("phone", make_shared <MyDB_StringAttType> ()));
+		mySchema->appendAtt (make_pair ("acctbal", make_shared <MyDB_DoubleAttType> ()));
+		mySchema->appendAtt (make_pair ("comment", make_shared <MyDB_StringAttType> ()));
 
-	// 	// use the schema to create a table
-	// 	MyDB_TablePtr myTable = make_shared <MyDB_Table> ("supplier", "supplier.bin", mySchema);
-	// 	MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-	// 	MyDB_TableReaderWriter supplierTable (myTable, myMgr);
+		// use the schema to create a table
+		MyDB_TablePtr myTable = make_shared <MyDB_Table> ("supplier", "supplier.bin", mySchema);
+		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+		MyDB_TableReaderWriter supplierTable (myTable, myMgr);
 
-	// 	// load it from a text file
-	// 	supplierTable.loadFromTextFile ("supplierBig.tbl");
+		// load it from a text file
+		supplierTable.loadFromTextFile ("supplierBig.tbl");
 
-	// 	// put the supplier table into the catalog
-	// 	myTable->putInCatalog (myCatalog);
-	// }
+		// put the supplier table into the catalog
+		myTable->putInCatalog (myCatalog);
+	}
 
-	// cout << "Sort a table.."  << flush;
-	// {
-	// 	// load up the table supplier table from the catalog
-	// 	MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-	// 	map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-	// 	MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-	// 	MyDB_TableReaderWriter supplierTable (allTables["supplier"], myMgr);
+	cout << "Sort a table.."  << flush;
+	{
+		// load up the table supplier table from the catalog
+		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+		MyDB_TableReaderWriter supplierTable (allTables["supplier"], myMgr);
 
-	// 	// use the schema to create a table
-	// 	MyDB_TablePtr outTable = make_shared <MyDB_Table> ("supplierSorted", "supplierSorted.bin", allTables["supplier"]->getSchema ());
-	// 	MyDB_TableReaderWriter outputTable (outTable, myMgr);
+		// use the schema to create a table
+		MyDB_TablePtr outTable = make_shared <MyDB_Table> ("supplierSorted", "supplierSorted.bin", allTables["supplier"]->getSchema ());
+		MyDB_TableReaderWriter outputTable (outTable, myMgr);
 
-	// 	// get two empty records
-	// 	MyDB_RecordPtr rec1 = supplierTable.getEmptyRecord ();
-	// 	MyDB_RecordPtr rec2 = supplierTable.getEmptyRecord ();
+		// get two empty records
+		MyDB_RecordPtr rec1 = supplierTable.getEmptyRecord ();
+		MyDB_RecordPtr rec2 = supplierTable.getEmptyRecord ();
 
-	// 	// and get a comparator
-	// 	function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
+		// and get a comparator
+		function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
 
-	// 	// and sort
-	// 	sort (64, supplierTable, outputTable, myComp, rec1, rec2);
+		// and sort
+		sort (64, supplierTable, outputTable, myComp, rec1, rec2);
 
-	// 	MyDB_RecordIteratorAltPtr myIter = outputTable.getIteratorAlt ();
+		MyDB_RecordIteratorAltPtr myIter = outputTable.getIteratorAlt ();
 
-	// 	// there should be 320000 records
-	// 	int counter = 0;
-	// 	while (myIter->advance ()) {
-	// 		myIter->getCurrent (rec1);
-	// 		counter++;
-	// 	}
+		// there should be 320000 records
+		int counter = 0;
+		while (myIter->advance ()) {
+			myIter->getCurrent (rec1);
+			counter++;
+		}
 
-    //     std::cout << "There are " << counter << " records in the sorted table." << std::endl;
+        std::cout << "There are " << counter << " records in the sorted table." << std::endl;
 
-	// 	//Check?
-	// 	if (counter == 320000) {
-	// 		countCorrect++;
-	// 	}
+		//Check?
+		if (counter == 320000) {
+			countCorrect++;
+		}
 		
-	// 	// put the supplier table into the catalog
-	// 	outTable->putInCatalog (myCatalog);
-	// }	
+		// put the supplier table into the catalog
+		outTable->putInCatalog (myCatalog);
+	}	
 	
-	// cout << "Compare Sorted Table.." << endl << flush;
-	// {
-	// 	// load up the two tables from the catalog
-	// 	MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-	// 	map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-	// 	MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-	// 	MyDB_TableReaderWriter sortedTable (allTables["supplierSorted"], myMgr);
-	// 	MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
+	cout << "Compare Sorted Table.." << endl << flush;
+	{
+		// load up the two tables from the catalog
+		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+		MyDB_TableReaderWriter sortedTable (allTables["supplierSorted"], myMgr);
+		MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
 
-	// 	// load up the sorted text file
-	// 	otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
+		// load up the sorted text file
+		otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
 
-	// 	// get two empty records
-	// 	MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
-	// 	MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
+		// get two empty records
+		MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
+		MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
 
-	// 	// and get a comparator
-	// 	function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
+		// and get a comparator
+		function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
 
-	// 	// get two iterators
-	// 	MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
-	// 	MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
+		// get two iterators
+		MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
+		MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
 
-	// 	// make sure the results are the same
-	// 	int matches = 0;
-    //     while (myIterOne->advance ()) {
-	// 		myIterTwo->advance ();
+		// make sure the results are the same
+		int matches = 0;
+		int index = 0;
+        while (myIterOne->advance ()) {
+			myIterTwo->advance ();
+			index++;
+			cout << "Record number " << index << endl;
+			// get the two records
+			myIterOne->getCurrent (rec1);
+			myIterTwo->getCurrent (rec2);
 
-	// 		// get the two records
-	// 		myIterOne->getCurrent (rec1);
-	// 		myIterTwo->getCurrent (rec2);
+			if (!myComp ()) {
+				myIterOne->getCurrent (rec2);
+				myIterTwo->getCurrent (rec1);
+				if (!myComp ())
+					matches++;
+				else {
+					cout << "Records do not match" << endl;
+					cout << "Record 1: " << rec1 << endl;
+					cout << "Record 2: " << rec2 << endl;
+				}
+			}
+        }
 
-	// 		if (!myComp ()) {
-	// 			myIterOne->getCurrent (rec2);
-	// 			myIterTwo->getCurrent (rec1);
-	// 			if (!myComp ())
-	// 				matches++;
-	// 		}
-    //     }
+        std::cout << "There are " << matches << " matching records." << std::endl;
 
-    //     std::cout << "There are " << matches << " matching records." << std::endl;
-
-	// 	//Check?
-	// 	if (matches == 320000) {
-	// 		countCorrect++;
-	// 	}
-	// }	
+		//Check?
+		if (matches == 320000) {
+			countCorrect++;
+		}
+	}	
 	
-	// QUNIT_IS_EQUAL (countCorrect, 2);
-	// if (countCorrect == 2) {
-	// 	cout << "PASS" << endl << flush;
-	// }
-	// else {
-	// 	cout << endl << endl << "***FAIL****" << endl << endl << flush;
-	// }
+	QUNIT_IS_EQUAL (countCorrect, 2);
+	if (countCorrect == 2) {
+		cout << "PASS" << endl << flush;
+	}
+	else {
+		cout << endl << endl << "***FAIL****" << endl << endl << flush;
+	}
 		
 		
 
-	// case 7:
-	// cout << endl << "Test 7: Sort file by pages:" << endl << flush;
-	// countCorrect = 0;
-	// {
-	// 	// load up the table supplier table from the catalog
-	// 	MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-	// 	map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-	// 	MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-	// 	MyDB_TableReaderWriter sortedTable (allTables["supplierSorted"], myMgr);		//The file is already sorted.
+	case 7:
+	cout << endl << "Test 7: Sort file by pages:" << endl << flush;
+	countCorrect = 0;
+	{
+		// load up the table supplier table from the catalog
+		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+		MyDB_TableReaderWriter sortedTable (allTables["supplierSorted"], myMgr);		//The file is already sorted.
 
 		
-	// 	// Go to ith page and sort again:
-	// 	for (int i = 0; i < sortedTable.getNumPages (); i++) {
-	// 		MyDB_RecordPtr temp = sortedTable.getEmptyRecord ();
-	// 		MyDB_RecordPtr temp2 = sortedTable.getEmptyRecord ();
+		// Go to ith page and sort again:
+		for (int i = 0; i < sortedTable.getNumPages (); i++) {
+			MyDB_RecordPtr temp = sortedTable.getEmptyRecord ();
+			MyDB_RecordPtr temp2 = sortedTable.getEmptyRecord ();
 			
-	// 		function <bool ()> myComp = buildRecordComparator (temp, temp2, "[acctbal]");
-	// 		MyDB_PageReaderWriterPtr sorted = sortedTable[i].sort (myComp, temp, temp2);	
-	// 	}
+			function <bool ()> myComp = buildRecordComparator (temp, temp2, "[acctbal]");
+			MyDB_PageReaderWriterPtr sorted = sortedTable[i].sort (myComp, temp, temp2);	
+		}
 
 		
 
-	// 	//Compare with pre-sorted table:
-	// 	MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
+		//Compare with pre-sorted table:
+		MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
 
-	// 	// load up the sorted text file
-	// 	otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
+		// load up the sorted text file
+		otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
 
-	// 	// get two empty records
-	// 	MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
-	// 	MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
+		// get two empty records
+		MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
+		MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
 
-	// 	// and get a comparator
-	// 	function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
+		// and get a comparator
+		function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
 
-	// 	// get two iterators
-	// 	MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
-	// 	MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
+		// get two iterators
+		MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
+		MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
 
-	// 	// make sure the results are the same
-	// 	int matches = 0;
-    //     while (myIterOne->advance ()) {
-	// 		myIterTwo->advance ();
+		// make sure the results are the same
+		int matches = 0;
+        while (myIterOne->advance ()) {
+			myIterTwo->advance ();
 
-	// 		// get the two records
-	// 		myIterOne->getCurrent (rec1);
-	// 		myIterTwo->getCurrent (rec2);
+			// get the two records
+			myIterOne->getCurrent (rec1);
+			myIterTwo->getCurrent (rec2);
 
-	// 		if (!myComp ()) {
-	// 			myIterOne->getCurrent (rec2);
-	// 			myIterTwo->getCurrent (rec1);
-	// 			if (!myComp ())
-	// 				matches++;
-	// 		}
-    //     }
+			if (!myComp ()) {
+				myIterOne->getCurrent (rec2);
+				myIterTwo->getCurrent (rec1);
+				if (!myComp ())
+					matches++;
+			}
+        }
 
-	// 	//Check?
-	// 	if (matches == 320000) {
-	// 		countCorrect++;
-	// 	}
-	// }		
+		//Check?
+		if (matches == 320000) {
+			countCorrect++;
+		}
+	}		
 		
-	// QUNIT_IS_EQUAL (countCorrect, 1);
-	// if (countCorrect == 1) {
-	// 	cout << "PASS" << endl << flush;
-	// }
-	// else {
-	// 	cout << endl << endl << "***FAIL****" << endl << endl << flush;
-	// }	
-		
-
-	// case 8:	
-	// cout << endl << "Test 8: Load a sorted file and sort again:" << endl << flush;
-	// countCorrect = 0;
-	// cout << "Initialization.." << flush;
-	// {
-	// 	// create a catalog
-	// 	MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-
-	// 	// now make a schema
-	// 	MyDB_SchemaPtr mySchema = make_shared <MyDB_Schema> ();
-	// 	mySchema->appendAtt (make_pair ("suppkey", make_shared <MyDB_IntAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("name", make_shared <MyDB_StringAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("address", make_shared <MyDB_StringAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("nationkey", make_shared <MyDB_IntAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("phone", make_shared <MyDB_StringAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("acctbal", make_shared <MyDB_DoubleAttType> ()));
-	// 	mySchema->appendAtt (make_pair ("comment", make_shared <MyDB_StringAttType> ()));
-
-	// 	// use the schema to create a table
-	// 	MyDB_TablePtr myTable = make_shared <MyDB_Table> ("newsupplier", "newsupplier.bin", mySchema);
-	// 	MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-	// 	MyDB_TableReaderWriter supplierTable (myTable, myMgr);
-
-	// 	// load it from a text file
-	// 	supplierTable.loadFromTextFile ("supplierBigSorted.tbl");
-
-	// 	// put the supplier table into the catalog
-	// 	myTable->putInCatalog (myCatalog);
-	// }
-
-	// cout << "Sort a table.."  << flush;
-	// {
-	// 	// load up the table supplier table from the catalog
-	// 	MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-	// 	map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-	// 	MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-	// 	MyDB_TableReaderWriter supplierTable (allTables["newsupplier"], myMgr);
-
-	// 	// use the schema to create a table
-	// 	MyDB_TablePtr outTable = make_shared <MyDB_Table> ("newsupplierSorted", "newsupplierSorted.bin", allTables["supplier"]->getSchema ());
-	// 	MyDB_TableReaderWriter outputTable (outTable, myMgr);
-
-	// 	// get two empty records
-	// 	MyDB_RecordPtr rec1 = supplierTable.getEmptyRecord ();
-	// 	MyDB_RecordPtr rec2 = supplierTable.getEmptyRecord ();
-
-	// 	// and get a comparator
-	// 	function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
-
-	// 	// and sort
-	// 	sort (64, supplierTable, outputTable, myComp, rec1, rec2);
-
-	// 	MyDB_RecordIteratorAltPtr myIter = outputTable.getIteratorAlt ();
-
-	// 	// there should be 320000 records
-	// 	int counter = 0;
-	// 	while (myIter->advance ()) {
-	// 		myIter->getCurrent (rec1);
-	// 		counter++;
-	// 	}
-
-	// 	//Check?
-	// 	if (counter == 320000) {
-	// 		countCorrect++;
-	// 	}
-		
-	// 	// put the supplier table into the catalog
-	// 	outTable->putInCatalog (myCatalog);
-	// }	
-	
-	// cout << "Compare Sorted Table.." << endl << flush;
-	// {
-	// 	// load up the two tables from the catalog
-	// 	MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-	// 	map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-	// 	MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-	// 	MyDB_TableReaderWriter sortedTable (allTables["newsupplierSorted"], myMgr);
-	// 	MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
-
-	// 	// load up the sorted text file
-	// 	otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
-
-	// 	// get two empty records
-	// 	MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
-	// 	MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
-
-	// 	// and get a comparator
-	// 	function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
-
-	// 	// get two iterators
-	// 	MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
-	// 	MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
-
-	// 	// make sure the results are the same
-	// 	int matches = 0;
-    //     while (myIterOne->advance ()) {
-	// 		myIterTwo->advance ();
-
-	// 		// get the two records
-	// 		myIterOne->getCurrent (rec1);
-	// 		myIterTwo->getCurrent (rec2);
-
-	// 		if (!myComp ()) {
-	// 			myIterOne->getCurrent (rec2);
-	// 			myIterTwo->getCurrent (rec1);
-	// 			if (!myComp ())
-	// 				matches++;
-	// 		}
-    //     }
-
-	// 	//Check?
-	// 	if (matches == 320000) {
-	// 		countCorrect++;
-	// 	}
-	// }	
-	
-	// QUNIT_IS_EQUAL (countCorrect, 2);
-	// if (countCorrect == 2) {
-	// 	cout << "PASS" << endl << flush;
-	// }
-	// else {
-	// 	cout << endl << endl << "***FAIL****" << endl << endl << flush;
-	// }
+	QUNIT_IS_EQUAL (countCorrect, 1);
+	if (countCorrect == 1) {
+		cout << "PASS" << endl << flush;
+	}
+	else {
+		cout << endl << endl << "***FAIL****" << endl << endl << flush;
+	}	
 		
 
-	// case 9:
-	// cout << endl << "Test 9: Reduce run size:" << endl << flush;
-	// countCorrect = 0;		
-	// cout << "Sort a table.."  << flush;
-	// {
-	// 	// load up the table supplier table from the catalog
-	// 	MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-	// 	map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-	// 	MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-	// 	MyDB_TableReaderWriter supplierTable (allTables["supplier"], myMgr);
+	case 8:	
+	cout << endl << "Test 8: Load a sorted file and sort again:" << endl << flush;
+	countCorrect = 0;
+	cout << "Initialization.." << flush;
+	{
+		// create a catalog
+		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
 
-	// 	// use the schema to create a table
-	// 	MyDB_TablePtr outTable = make_shared <MyDB_Table> ("supplierSorted", "supplierSorted.bin", allTables["supplier"]->getSchema ());
-	// 	MyDB_TableReaderWriter outputTable (outTable, myMgr);
+		// now make a schema
+		MyDB_SchemaPtr mySchema = make_shared <MyDB_Schema> ();
+		mySchema->appendAtt (make_pair ("suppkey", make_shared <MyDB_IntAttType> ()));
+		mySchema->appendAtt (make_pair ("name", make_shared <MyDB_StringAttType> ()));
+		mySchema->appendAtt (make_pair ("address", make_shared <MyDB_StringAttType> ()));
+		mySchema->appendAtt (make_pair ("nationkey", make_shared <MyDB_IntAttType> ()));
+		mySchema->appendAtt (make_pair ("phone", make_shared <MyDB_StringAttType> ()));
+		mySchema->appendAtt (make_pair ("acctbal", make_shared <MyDB_DoubleAttType> ()));
+		mySchema->appendAtt (make_pair ("comment", make_shared <MyDB_StringAttType> ()));
 
-	// 	// get two empty records
-	// 	MyDB_RecordPtr rec1 = supplierTable.getEmptyRecord ();
-	// 	MyDB_RecordPtr rec2 = supplierTable.getEmptyRecord ();
+		// use the schema to create a table
+		MyDB_TablePtr myTable = make_shared <MyDB_Table> ("newsupplier", "newsupplier.bin", mySchema);
+		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+		MyDB_TableReaderWriter supplierTable (myTable, myMgr);
 
-	// 	// and get a comparator
-	// 	function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
+		// load it from a text file
+		supplierTable.loadFromTextFile ("supplierBigSorted.tbl");
 
-	// 	// and sort
-	// 	sort (32, supplierTable, outputTable, myComp, rec1, rec2);
+		// put the supplier table into the catalog
+		myTable->putInCatalog (myCatalog);
+	}
 
-	// 	MyDB_RecordIteratorAltPtr myIter = outputTable.getIteratorAlt ();
+	cout << "Sort a table.."  << flush;
+	{
+		// load up the table supplier table from the catalog
+		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+		MyDB_TableReaderWriter supplierTable (allTables["newsupplier"], myMgr);
 
-	// 	// there should be 320000 records
-	// 	int counter = 0;
-	// 	while (myIter->advance ()) {
-	// 		myIter->getCurrent (rec1);
-	// 		counter++;
-	// 	}
+		// use the schema to create a table
+		MyDB_TablePtr outTable = make_shared <MyDB_Table> ("newsupplierSorted", "newsupplierSorted.bin", allTables["supplier"]->getSchema ());
+		MyDB_TableReaderWriter outputTable (outTable, myMgr);
 
-	// 	//Check?
-	// 	if (counter == 320000) {
-	// 		countCorrect++;
-	// 	}
+		// get two empty records
+		MyDB_RecordPtr rec1 = supplierTable.getEmptyRecord ();
+		MyDB_RecordPtr rec2 = supplierTable.getEmptyRecord ();
+
+		// and get a comparator
+		function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
+
+		// and sort
+		sort (64, supplierTable, outputTable, myComp, rec1, rec2);
+
+		MyDB_RecordIteratorAltPtr myIter = outputTable.getIteratorAlt ();
+
+		// there should be 320000 records
+		int counter = 0;
+		while (myIter->advance ()) {
+			myIter->getCurrent (rec1);
+			counter++;
+		}
+
+		//Check?
+		if (counter == 320000) {
+			countCorrect++;
+		}
 		
-	// 	// put the supplier table into the catalog
-	// 	outTable->putInCatalog (myCatalog);
-	// }	
+		// put the supplier table into the catalog
+		outTable->putInCatalog (myCatalog);
+	}	
 	
-	// cout << "Compare Sorted Table.." << endl << flush;
-	// {
-	// 	// load up the two tables from the catalog
-	// 	MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-	// 	map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-	// 	MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-	// 	MyDB_TableReaderWriter sortedTable (allTables["supplierSorted"], myMgr);
-	// 	MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
+	cout << "Compare Sorted Table.." << endl << flush;
+	{
+		// load up the two tables from the catalog
+		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+		MyDB_TableReaderWriter sortedTable (allTables["newsupplierSorted"], myMgr);
+		MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
 
-	// 	// load up the sorted text file
-	// 	otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
+		// load up the sorted text file
+		otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
 
-	// 	// get two empty records
-	// 	MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
-	// 	MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
+		// get two empty records
+		MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
+		MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
 
-	// 	// and get a comparator
-	// 	function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
+		// and get a comparator
+		function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
 
-	// 	// get two iterators
-	// 	MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
-	// 	MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
+		// get two iterators
+		MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
+		MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
 
-	// 	// make sure the results are the same
-	// 	int matches = 0;
-    //     while (myIterOne->advance ()) {
-	// 		myIterTwo->advance ();
+		// make sure the results are the same
+		int matches = 0;
+        while (myIterOne->advance ()) {
+			myIterTwo->advance ();
 
-	// 		// get the two records
-	// 		myIterOne->getCurrent (rec1);
-	// 		myIterTwo->getCurrent (rec2);
+			// get the two records
+			myIterOne->getCurrent (rec1);
+			myIterTwo->getCurrent (rec2);
 
-	// 		if (!myComp ()) {
-	// 			myIterOne->getCurrent (rec2);
-	// 			myIterTwo->getCurrent (rec1);
-	// 			if (!myComp ())
-	// 				matches++;
-	// 		}
-    //     }
+			if (!myComp ()) {
+				myIterOne->getCurrent (rec2);
+				myIterTwo->getCurrent (rec1);
+				if (!myComp ())
+					matches++;
+			}
+        }
 
-	// 	//Check?
-	// 	if (matches == 320000) {
-	// 		countCorrect++;
-	// 	}
-	// }	
+		//Check?
+		if (matches == 320000) {
+			countCorrect++;
+		}
+	}	
 	
-	// QUNIT_IS_EQUAL (countCorrect, 2);
-	// if (countCorrect == 2) {
-	// 	cout << "PASS" << endl << flush;
-	// }
-	// else {
-	// 	cout << endl << endl << "***FAIL****" << endl << endl << flush;
-	// }	
-	
-	
-	// case 10:
-	// cout << endl << "Test 10: Reduce run size even more:" << endl << flush;
-	// countCorrect = 0;		
-	// cout << "Sort a table.."  << flush;
-	// {
-	// 	// load up the table supplier table from the catalog
-	// 	MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-	// 	map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-	// 	MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-	// 	MyDB_TableReaderWriter supplierTable (allTables["supplier"], myMgr);
-
-	// 	// use the schema to create a table
-	// 	MyDB_TablePtr outTable = make_shared <MyDB_Table> ("supplierSortedRRS", "supplierSortedRRS.bin", allTables["supplier"]->getSchema ());
-	// 	MyDB_TableReaderWriter outputTable (outTable, myMgr);
-
-	// 	// get two empty records
-	// 	MyDB_RecordPtr rec1 = supplierTable.getEmptyRecord ();
-	// 	MyDB_RecordPtr rec2 = supplierTable.getEmptyRecord ();
-
-	// 	// and get a comparator
-	// 	function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
-
-	// 	// and sort
-	// 	sort (7, supplierTable, outputTable, myComp, rec1, rec2);
-
-	// 	MyDB_RecordIteratorAltPtr myIter = outputTable.getIteratorAlt ();
-
-	// 	// there should be 320000 records
-	// 	int counter = 0;
-	// 	while (myIter->advance ()) {
-	// 		myIter->getCurrent (rec1);
-	// 		counter++;
-	// 	}
-
-	// 	//Check?
-	// 	if (counter == 320000) {
-	// 		countCorrect++;
-	// 	}
+	QUNIT_IS_EQUAL (countCorrect, 2);
+	if (countCorrect == 2) {
+		cout << "PASS" << endl << flush;
+	}
+	else {
+		cout << endl << endl << "***FAIL****" << endl << endl << flush;
+	}
 		
-	// 	// put the supplier table into the catalog
-	// 	outTable->putInCatalog (myCatalog);
-	// }	
+
+	case 9:
+	cout << endl << "Test 9: Reduce run size:" << endl << flush;
+	countCorrect = 0;		
+	cout << "Sort a table.."  << flush;
+	{
+		// load up the table supplier table from the catalog
+		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+		MyDB_TableReaderWriter supplierTable (allTables["supplier"], myMgr);
+
+		// use the schema to create a table
+		MyDB_TablePtr outTable = make_shared <MyDB_Table> ("supplierSorted", "supplierSorted.bin", allTables["supplier"]->getSchema ());
+		MyDB_TableReaderWriter outputTable (outTable, myMgr);
+
+		// get two empty records
+		MyDB_RecordPtr rec1 = supplierTable.getEmptyRecord ();
+		MyDB_RecordPtr rec2 = supplierTable.getEmptyRecord ();
+
+		// and get a comparator
+		function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
+
+		// and sort
+		sort (32, supplierTable, outputTable, myComp, rec1, rec2);
+
+		MyDB_RecordIteratorAltPtr myIter = outputTable.getIteratorAlt ();
+
+		// there should be 320000 records
+		int counter = 0;
+		while (myIter->advance ()) {
+			myIter->getCurrent (rec1);
+			counter++;
+		}
+
+		//Check?
+		if (counter == 320000) {
+			countCorrect++;
+		}
+		
+		// put the supplier table into the catalog
+		outTable->putInCatalog (myCatalog);
+	}	
 	
-	// cout << "Compare Sorted Table.." << endl << flush;
-	// {
-	// 	// load up the two tables from the catalog
-	// 	MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
-	// 	map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
-	// 	MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
-	// 	MyDB_TableReaderWriter sortedTable (allTables["supplierSortedRRS"], myMgr);
-	// 	MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
+	cout << "Compare Sorted Table.." << endl << flush;
+	{
+		// load up the two tables from the catalog
+		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+		MyDB_TableReaderWriter sortedTable (allTables["supplierSorted"], myMgr);
+		MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
 
-	// 	// load up the sorted text file
-	// 	otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
+		// load up the sorted text file
+		otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
 
-	// 	// get two empty records
-	// 	MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
-	// 	MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
+		// get two empty records
+		MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
+		MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
 
-	// 	// and get a comparator
-	// 	function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
+		// and get a comparator
+		function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
 
-	// 	// get two iterators
-	// 	MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
-	// 	MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
+		// get two iterators
+		MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
+		MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
 
-	// 	// make sure the results are the same
-	// 	int matches = 0;
-    //     while (myIterOne->advance ()) {
-	// 		myIterTwo->advance ();
+		// make sure the results are the same
+		int matches = 0;
+        while (myIterOne->advance ()) {
+			myIterTwo->advance ();
 
-	// 		// get the two records
-	// 		myIterOne->getCurrent (rec1);
-	// 		myIterTwo->getCurrent (rec2);
+			// get the two records
+			myIterOne->getCurrent (rec1);
+			myIterTwo->getCurrent (rec2);
 
-	// 		if (!myComp ()) {
-	// 			myIterOne->getCurrent (rec2);
-	// 			myIterTwo->getCurrent (rec1);
-	// 			if (!myComp ())
-	// 				matches++;
-	// 		}
-    //     }
+			if (!myComp ()) {
+				myIterOne->getCurrent (rec2);
+				myIterTwo->getCurrent (rec1);
+				if (!myComp ())
+					matches++;
+			}
+        }
 
-	// 	//Check?
-	// 	if (matches == 320000) {
-	// 		countCorrect++;
-	// 	}
-	// }	
+		//Check?
+		if (matches == 320000) {
+			countCorrect++;
+		}
+	}	
 	
-	// QUNIT_IS_EQUAL (countCorrect, 2);
-	// if (countCorrect == 2) {
-	// 	cout << "PASS" << endl << flush;
-	// }
-	// else {
-	// 	cout << endl << endl << "***FAIL****" << endl << endl << flush;
-	// }		
+	QUNIT_IS_EQUAL (countCorrect, 2);
+	if (countCorrect == 2) {
+		cout << "PASS" << endl << flush;
+	}
+	else {
+		cout << endl << endl << "***FAIL****" << endl << endl << flush;
+	}	
+	
+	
+	case 10:
+	cout << endl << "Test 10: Reduce run size even more:" << endl << flush;
+	countCorrect = 0;		
+	cout << "Sort a table.."  << flush;
+	{
+		// load up the table supplier table from the catalog
+		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+		MyDB_TableReaderWriter supplierTable (allTables["supplier"], myMgr);
+
+		// use the schema to create a table
+		MyDB_TablePtr outTable = make_shared <MyDB_Table> ("supplierSortedRRS", "supplierSortedRRS.bin", allTables["supplier"]->getSchema ());
+		MyDB_TableReaderWriter outputTable (outTable, myMgr);
+
+		// get two empty records
+		MyDB_RecordPtr rec1 = supplierTable.getEmptyRecord ();
+		MyDB_RecordPtr rec2 = supplierTable.getEmptyRecord ();
+
+		// and get a comparator
+		function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
+
+		// and sort
+		sort (7, supplierTable, outputTable, myComp, rec1, rec2);
+
+		MyDB_RecordIteratorAltPtr myIter = outputTable.getIteratorAlt ();
+
+		// there should be 320000 records
+		int counter = 0;
+		while (myIter->advance ()) {
+			myIter->getCurrent (rec1);
+			counter++;
+		}
+
+		//Check?
+		if (counter == 320000) {
+			countCorrect++;
+		}
+		
+		// put the supplier table into the catalog
+		outTable->putInCatalog (myCatalog);
+	}	
+	
+	cout << "Compare Sorted Table.." << endl << flush;
+	{
+		// load up the two tables from the catalog
+		MyDB_CatalogPtr myCatalog = make_shared <MyDB_Catalog> ("catFile");
+		map <string, MyDB_TablePtr> allTables = MyDB_Table :: getAllTables (myCatalog);
+		MyDB_BufferManagerPtr myMgr = make_shared <MyDB_BufferManager> (131072, 128, "tempFile");
+		MyDB_TableReaderWriter sortedTable (allTables["supplierSortedRRS"], myMgr);
+		MyDB_TableReaderWriter otherSortedTable (allTables["supplier"], myMgr);
+
+		// load up the sorted text file
+		otherSortedTable.loadFromTextFile ("supplierBigSorted.tbl");
+
+		// get two empty records
+		MyDB_RecordPtr rec1 = sortedTable.getEmptyRecord ();
+		MyDB_RecordPtr rec2 = otherSortedTable.getEmptyRecord ();
+
+		// and get a comparator
+		function <bool ()> myComp = buildRecordComparator (rec1, rec2, "[acctbal]");
+
+		// get two iterators
+		MyDB_RecordIteratorAltPtr myIterOne = sortedTable.getIteratorAlt ();
+		MyDB_RecordIteratorAltPtr myIterTwo = otherSortedTable.getIteratorAlt ();
+
+		// make sure the results are the same
+		int matches = 0;
+        while (myIterOne->advance ()) {
+			myIterTwo->advance ();
+
+			// get the two records
+			myIterOne->getCurrent (rec1);
+			myIterTwo->getCurrent (rec2);
+
+			if (!myComp ()) {
+				myIterOne->getCurrent (rec2);
+				myIterTwo->getCurrent (rec1);
+				if (!myComp ())
+					matches++;
+			}
+        }
+
+		//Check?
+		if (matches == 320000) {
+			countCorrect++;
+		}
+	}	
+	
+	QUNIT_IS_EQUAL (countCorrect, 2);
+	if (countCorrect == 2) {
+		cout << "PASS" << endl << flush;
+	}
+	else {
+		cout << endl << endl << "***FAIL****" << endl << endl << flush;
+	}		
 	
 	default:
 		break;

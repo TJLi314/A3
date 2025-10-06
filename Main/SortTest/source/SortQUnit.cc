@@ -591,6 +591,8 @@ int main (int argc, char *argv[]) {
 	// 		counter++;
 	// 	}
 
+    //     std::cout << "There are " << counter << " records in the sorted table." << std::endl;
+
 	// 	//Check?
 	// 	if (counter == 320000) {
 	// 		countCorrect++;
@@ -639,6 +641,8 @@ int main (int argc, char *argv[]) {
 	// 				matches++;
 	// 		}
     //     }
+
+    //     std::cout << "There are " << matches << " matching records." << std::endl;
 
 	// 	//Check?
 	// 	if (matches == 320000) {

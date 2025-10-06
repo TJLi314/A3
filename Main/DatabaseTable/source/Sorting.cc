@@ -92,8 +92,9 @@ void sort (int runSize, MyDB_TableReaderWriter &sortMe, MyDB_TableReaderWriter &
         // Load a run of pages into RAM .
         // Each page will correspond to a MyDB_PageReaderWriter object, and
         // all of those objects will be stored in a std :: vector.
+        int end = min(i + runSize, sortMe.getNumPages());
         vector<vector<MyDB_PageReaderWriter>> run;
-        for (; i < i + runSize && i < sortMe.getNumPages(); i++) {
+        for (; i < end; i++) {
             MyDB_PageReaderWriter page = sortMe[i];
  
             // Sort each individual page in the vector
@@ -114,6 +115,7 @@ void sort (int runSize, MyDB_TableReaderWriter &sortMe, MyDB_TableReaderWriter &
                 MyDB_RecordIteratorAltPtr leftIter = getIteratorAlt(run[j]);
                 MyDB_RecordIteratorAltPtr rightIter = getIteratorAlt(run[j + 1]);
                 vector <MyDB_PageReaderWriter> sortedPages = mergeIntoList(sortMe.getBufferMgr(), leftIter, rightIter, comparator, lhs, rhs);
+                newVector.push_back(sortedPages);
             }
  
             run = newVector;
